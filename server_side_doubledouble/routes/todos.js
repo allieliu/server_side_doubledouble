@@ -21,7 +21,7 @@ router.route('/')
   todo.updatedAt = new Date();
   todo.save(function(err){
   	if(err) return err;
-	else res.send(todo);  	
+	else res.send(todo);
   });
 });
 
@@ -30,16 +30,23 @@ router.route('/:id')
 	Todo.findById(req.params.id)
 	.then(function(todo){
 	  todo.updatedAt = new Date();
-	  todo.isCompleted = true;
+	  todo.isComplete = true;
 	  todo.completedOn = new Date();
 	  return todo.save();
 	})
-	.then(function(todo){})
-
+	.then(function(todo){
+    res.status(200).send(todo)
+  })
 })
 
 .delete(function(req, res){
-
+  Todo.findOneAndRemove({'_id': req.params.id})
+  .then(function(todo){
+    res.status(200).send(todo)
+  })
+  .catch(function(err){
+    res.status(500).send(err)
+  });
 });
 
 
