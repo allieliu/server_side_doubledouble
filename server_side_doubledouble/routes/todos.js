@@ -19,12 +19,22 @@ router.route('/')
   todo.difficulty = req.body.difficulty;
   todo.createdAt = new Date();
   todo.updatedAt = new Date();
-  todo.save()
-	res.send('updated!');
+  todo.save(function(err){
+  	if(err) return err;
+	else res.send(todo);  	
+  });
 });
 
 router.route('/:id')
 .patch(function(req, res){
+	Todo.findById(req.params.id)
+	.then(function(todo){
+	  todo.updatedAt = new Date();
+	  todo.isCompleted = true;
+	  todo.completedOn = new Date();
+	  return todo.save();
+	})
+	.then(function(todo){})
 
 })
 
