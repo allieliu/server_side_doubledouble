@@ -27,25 +27,30 @@ router.route('/')
 
 router.route('/:id')
 .patch(function(req, res){
+	console.log(req.body);
 	Todo.findById(req.params.id)
 	.then(function(todo){
+	  todo.title = req.body.title;
+	  todo.priority = req.body.priority;
+	  todo.difficulty = req.body.difficulty;
 	  todo.updatedAt = new Date();
-	  todo.isComplete = true;
-	  todo.completedOn = new Date();
+	  todo.isComplete = req.body.isComplete;
+	  if(todo.isComplete)todo.completedOn = new Date();
 	  return todo.save();
 	})
+		
 	.then(function(todo){
-    res.status(200).send(todo)
-  })
+    	res.status(200).send(todo);
+  });
 })
 
 .delete(function(req, res){
   Todo.findOneAndRemove({'_id': req.params.id})
   .then(function(todo){
-    res.status(200).send(todo)
+    res.status(200).send(todo);
   })
   .catch(function(err){
-    res.status(500).send(err)
+    res.status(500).send(err);
   });
 });
 
